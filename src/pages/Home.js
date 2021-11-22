@@ -1,16 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
+import { Link } from 'react-router-dom'
 
 import { Box, Text, UnorderedList, ListItem, Button } from "@chakra-ui/react"
+import { UserContext } from "../contexts/User"
 
 const Home = () => {
   const [pokemon, setPokemon] = useState(null)
+  const { isLogged } = useContext(UserContext)
 
   useEffect(() => { // => componentDidMount
     getPokemon(1)
-
-    // fetch(`https://pokeapi.co/api/v2/pokemon/1`)
-    //   .then(response => response.json())
-    //   .then(data => setPokemon(data))
   }, [])
 
   const getPokemon = id => {
@@ -22,17 +21,19 @@ const Home = () => {
   const handleButtonClick = () => {
     const randomId = Math.floor(Math.random() * 151 + 1)
     getPokemon(randomId)
-
-    // fetch(`https://pokeapi.co/api/v2/pokemon/${randomId}`)
-    //   .then(response => response.json())
-    //   .then(data => setPokemon(data))
   }
 
   if (!pokemon) {
     return <p>Pas de pokemon</p>
   }
 
-  console.log(pokemon)
+  if (!isLogged) {
+    return (
+      <>
+        <Link to="/login">Vous n'etes pas connecté. Retour page login</Link>
+      </>
+    )
+  }
 
   return (
     <Box>
